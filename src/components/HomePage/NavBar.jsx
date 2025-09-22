@@ -7,8 +7,8 @@ function NavBar(){
     {/* Navbar */}
       <Navbar bg="light" expand="lg" className="shadow-sm fixed-top">
         <Container>
-          <Navbar.Brand href="#home" className="fw-bold text-success">
-            ONLINE STORE
+          <Navbar.Brand href="/" className="fw-bold text-success">
+            ApniShop
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">

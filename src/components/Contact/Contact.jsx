@@ -44,15 +44,15 @@ function Contact() {
                   <h5 className="fw-bold mb-3">Get in Touch</h5>
                   <p className="mb-2">
                     <GeoAlt className="me-2 text-danger" />
-                    123, Main Market, New Delhi, India
+                    48, Main Market, Charthawal, India
                   </p>
                   <p className="mb-2">
                     <Telephone className="me-2 text-primary" />
-                    +91 98765 43210
+                    +91 8449920648
                   </p>
                   <p>
                     <Envelope className="me-2 text-success" />
-                    support@shopmanager.com
+                    ashishmzn@gmail.com
                   </p>
                   <p className="text-muted small mt-3">
                     Working Hours: Mon – Sat (9:00 AM – 7:00 PM)

@@ -1,4 +1,4 @@
-import Card from "./components/Cards/card";
+import Card from "./components/Cards/Card";
 import { Container, Row, Col } from "react-bootstrap";
 import Home from "./components/HomePage/Home";
 import SignUp from "./components/SignUp/SignUp";
@@ -8,21 +8,43 @@ import { Route, Router, Routes } from "react-router-dom";
 import About from "./components/About/About";
 import Service from "./components/Service/Service";
 import Contact from "./components/Contact/Contact";
+// import Product from "./components/Product/Product";
 import { useState } from "react";
+import Product from "./components/Product/Product";
 
 function App() {
   const [username, setusername] = useState("");
+
+  // card item
+  const [items, setItems] = useState([]);
+  const handleAddItem = (product, category, image, action) => {
+    const newItem = {
+      id: Date.now(),
+      Product: product,
+      Category: category,
+      image: image,
+      Action: action,
+    };
+    setItems( [...items, newItem]);
+  };
+
+  const handleRemoveItem = (id) => {
+    const updatedItems = items.filter((data) => data.id !== id);
+    setItems(updatedItems);
+  };
+
   return (
     <Container
       fluid
       className="d-flex justify-content-center align-items-center min-vh-100"
     >
-      <Row>
+      <Row >
         <Col>
           {/* <Router> */}
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/Card" element={<Card />} />
+            <Route path="/Product" element={<Product items={items}/>}/>
+            <Route path="/Card" element={<Card items={items} handleAddItem={handleAddItem} handleRemoveItem={handleRemoveItem} />} />
             {!username ? (
              <Route path="/SignUp" element={ <SignUp setUsername={setusername}/>} />
             ) : (

@@ -7,11 +7,11 @@ import {
 import CardItem from "./CardItem";
 import AddCard from "./AddCard";
 
-function ViewCard({ Add = [], SendData, Remove }) {
+function HeaderCard({ Add = [], SendData, Remove }) {
   return (
     <Container
       fluid
-      className="d-flex align-items-center justify-content-center min-vh-100 bg-light py-5"
+      className="d-flex align-items-center justify-content-center min-vh-100 vh-100 vw-100 bg-light py-5"
     >
       <BCard className="shadow-lg w-100" style={{ maxWidth: "1200px" }}>
         <BCard.Body className="p-4">
@@ -48,4 +48,4 @@ function ViewCard({ Add = [], SendData, Remove }) {
   );
 }
 
-export default ViewCard;
+export default HeaderCard;

@@ -4,8 +4,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar, Nav, Container, Button, Row, Col } from "react-bootstrap";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navget=useNavigate();
   return (
     <>
        {/* Navbar */}
@@ -13,7 +15,7 @@ function Home() {
 
       {/* Hero Section */}
       <section
-        className="d-flex align-items-center justify-content-center text-white"
+        className="d-flex align-items-center justify-content-center vh-100 vw-100 text-white"
         style={{
           background: "linear-gradient(90deg, #ff4b2b, #ff416c)",
           minHeight: "100vh",
@@ -25,13 +27,13 @@ function Home() {
           <Row className="align-items-center">
             {/* Left Side */}
             <Col md={6} className="text-center text-md-start">
-              <h1 className="fw-bold display-3">ONLINE GROCERY STORE</h1>
+              <h1 className="fw-bold display-3">ONLINE ApniShop STORE</h1>
               <h4 className="mb-4">Home Delivery</h4>
               <p className="lead">
-                Order fresh groceries, fruits, vegetables, and daily essentials
+                Order fresh ApniShop, fruits, vegetables, and daily essentials
                 online with fast and safe home delivery.
               </p>
-              <Button variant="light" className="text-danger fw-bold px-4 py-2">
+              <Button variant="light" className="text-danger fw-bold px-4 py-2" onClick={()=>navget("\Product")}>
                 Shop Now
               </Button>
             </Col>
