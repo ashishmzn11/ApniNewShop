@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { ArrowLeft } from "react-bootstrap-icons";
+import { AppContaxt } from "../../store/store";
 
-const Product = ({ items = [] }) => {
+const Product = () => {
+  const {items}=useContext(AppContaxt)
   return (
     <Container fluid className="d-flex justify-content-center align-items-center vh-100 vw-100 bg-light" >
        

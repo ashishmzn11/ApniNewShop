@@ -5,12 +5,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import App from "./App.jsx";
 import Product from "./components/Product/Product.jsx";
+import { AppProvider } from "./store/store.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
+    <AppProvider>
       <App />
-      {/* <Product/> */}
+    </AppProvider>
     </BrowserRouter>
   </StrictMode>
 );

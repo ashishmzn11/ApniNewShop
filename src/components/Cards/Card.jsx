@@ -1,16 +1,178 @@
-import { useState } from "react";
-import HeaderCard from "./HeaderCard";
+import { useContext, useState } from "react";
+import {
+  Table,
+  Button,
+  Row,
+  Col,
+  Card as BCard,
+  Form,
+  Container,
+} from "react-bootstrap";
+import { AppContaxt } from "../../store/store";
 
-function Card({items,handleAddItem,handleRemoveItem}) {
+export default function Card() {
+  const {items,handleAddItem,handleRemoveItem}=useContext(AppContaxt)
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [image, setImage] = useState("");
+
+  const handleNameChange = (e) => setName(e.target.value);
+  const handleCategoryChange = (e) => setCategory(e.target.value);
+
+  const handleImgChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImage(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleClick = () => {
+  if (!name || !category || !image) return; // validation
+  handleAddItem(name, category, image);
+  setName("");
+  setCategory("");
+  setImage("");
+};
+
+
+
   return (
-    <>
-      <HeaderCard 
-        Add={items} 
-        SendData={handleAddItem} 
-        Remove={handleRemoveItem} 
-      />
-    </>
+    <Container
+      fluid
+      className="d-flex align-items-center justify-content-center min-vh-100 vh-100 vw-100 bg-light py-5"
+    >
+      <BCard className="shadow-lg w-100" style={{ maxWidth: "1200px" }}>
+        <BCard.Body className="p-4">
+          <h2 className="text-center text-success fw-bold mb-4">
+            🏪 Pantry Manager
+          </h2>
+
+          {/* Table Section */}
+          <div className="table-responsive">
+            <Table
+              bordered
+              hover
+              responsive="sm"
+              className="align-middle text-center mb-4"
+            >
+              <thead className="table-primary">
+                <tr>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Image</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((data) => (
+                  <tr key={data.id} className="align-middle">
+                    <td className="fw-semibold">{data.Product}</td>
+                    <td className="text-muted">{data.Category}</td>
+                    <td>
+                      <img
+                        src={data.image}
+                        alt={data.Product}
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "cover",
+                          borderRadius: "6px",
+                          border: "1px solid #dee2e6",
+                        }}
+                      />
+                    </td>
+                    <td>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="fw-bold"
+                        onClick={() => handleRemoveItem(data.id)}
+                      >
+                        {data.Action}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+
+          {/* Add Product Form */}
+          <BCard className="shadow-sm border-0 rounded-4 p-3 mt-4">
+            <h4 className="fw-bold text-success mb-3">➕ Add New Product</h4>
+
+            <Row className="align-items-end g-3">
+              {/* Product Name */}
+              <Col xs={12} md={4}>
+                <Form.Group>
+                  <Form.Label className="fw-semibold">Product Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={name}
+                    onChange={handleNameChange}
+                    placeholder="Enter product name"
+                  />
+                </Form.Group>
+              </Col>
+
+              {/* Category */}
+              <Col xs={12} md={3}>
+                <Form.Group>
+                  <Form.Label className="fw-semibold">Category</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={category}
+                    onChange={handleCategoryChange}
+                    placeholder="Enter category"
+                  />
+                </Form.Group>
+              </Col>
+
+              {/* Image Upload */}
+              <Col xs={12} md={3}>
+                <Form.Group>
+                  <Form.Label className="fw-semibold">Upload Image</Form.Label>
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImgChange}
+                  />
+                </Form.Group>
+              </Col>
+
+              {/* Add Button */}
+              <Col xs={12} md={2}>
+                <Button
+                  variant="success"
+                  className="w-100 fw-bold"
+                  onClick={handleClick}
+                >
+                  Add Product
+                </Button>
+              </Col>
+            </Row>
+
+            {/* Image Preview */}
+            {image && (
+              <div className="mt-4 text-center">
+                <p className="fw-semibold text-muted">Preview:</p>
+                <img
+                  src={image}
+                  alt="preview"
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    objectFit: "cover",
+                    borderRadius: "10px",
+                    border: "2px solid #28a745",
+                  }}
+                />
+              </div>
+            )}
+          </BCard>
+        </BCard.Body>
+      </BCard>
+    </Container>
   );
 }
-
-export default Card;
