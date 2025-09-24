@@ -1,42 +1,39 @@
-import Card from "./components/Cards/Card";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import Home from "./components/HomePage/Home";
 import SignUp from "./components/SignUp/SignUp";
 import SignIn from "./components/Sign/SignIn";
 import Admin from "./components/Admin/Admin";
-import { Route, Router, Routes } from "react-router-dom";
 import About from "./components/About/About";
 import Service from "./components/Service/Service";
 import Contact from "./components/Contact/Contact";
-import { useContext, useState } from "react";
 import Product from "./components/Product/Product";
+import Card from "./components/Cards/Card";
+import { useState } from "react";
 
 function App() {
-  const [username, setusername] = useState("");
+  const [username, setUsername] = useState(null);
+
   return (
-    <Container
-      fluid
-      className="d-flex justify-content-center align-items-center min-vh-100"
-    >
-      <Row >
+    <Container fluid className="min-vh-100">
+      <Row>
         <Col>
-          {/* <Router> */}
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/Product" element={<Product />}/>
-            <Route path="/Card" element={<Card  />} />
-            {!username ? (
-             <Route path="/SignUp" element={ <SignUp setUsername={setusername}/>} />
-            ) : (
-             <Route path="/Admin" element={ <Admin username={username}/>} />
-            )}
-            <Route path="/SignIn" element={<SignIn />} />
-            <Route path="/Admin" element={<Admin />} />
+            <Route path="/Product" element={<Product />} />
+            <Route path="/Card" element={<Card />} />
+            <Route path="/SignUp" element={<SignUp setUsername={setUsername} />} />
+            <Route path="/SignIn" element={<SignIn setUsername={setUsername} />} />
+            <Route
+              path="/Admin"
+              element={username ? <Admin username={username} /> : <Navigate to="/SignIn" />}
+            />
             <Route path="/About" element={<About />} />
             <Route path="/Service" element={<Service />} />
             <Route path="/Contact" element={<Contact />} />
+            {/* fallback */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
-          {/* </Router> */}
         </Col>
       </Row>
     </Container>

@@ -1,41 +1,49 @@
 // SignUp.js
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "react-bootstrap-icons";
+import { AppContaxt } from "../../store/store";
 
-function SignUp({setUsername}) {
+function SignUp({ setUsername }) {
   const navigate = useNavigate();
+  const { handleSignUp } = useContext(AppContaxt);
 
-  const useremails = ["ashish@gmail.com", "vishal@gmail.com"];
+  const [fullname, setFullname] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [conpass, setconpass] = useState("");
   const [error, setError] = useState("");
 
+  // Submit handler
   const HandleSignUp = (e) => {
     e.preventDefault();
-    setUsername(email)
-    if (useremails.includes(email)) {
-      setError("Email already registered.");
-      return;
-    }
-    if (password.length < 4) {
-      setError("Password must be at least 4 characters long.");
-      return;
-    }
+
+    // Confirm password check
     if (password !== conpass) {
-      setError("Passwords do not match.");
+      setError("Passwords do not match!");
       return;
     }
-    setError("");
-    alert("Account Created Successfully!");
-    navigate("/Admin");
+
+    // Call context signup method
+    const result = handleSignUp(email, password);
+
+    if (result.success) {
+      setError("");
+      setFullname("");
+      setemail("");
+      setpassword("");
+      setconpass("");
+      // Navigate to SignIn page
+      navigate("/SignIn");
+    } else {
+      setError(result.message);
+    }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 vw-100 bg-light" >
+    <div className="d-flex justify-content-center align-items-center vh-100 vw-100 bg-light">
       <Card className="shadow-lg border-0 rounded-0 w-100 h-100">
         <Card.Body className="p-4 d-flex flex-column justify-content-center align-items-center">
           <div
@@ -51,6 +59,8 @@ function SignUp({setUsername}) {
                 <Form.Control
                   type="text"
                   placeholder="Enter your full name"
+                  value={fullname}
+                  onChange={(e) => setFullname(e.target.value)}
                   required
                 />
               </Form.Group>

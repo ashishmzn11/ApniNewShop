@@ -9,16 +9,21 @@ import {
   Container,
 } from "react-bootstrap";
 import { AppContaxt } from "../../store/store";
+import EditCard from "./EditCard";
 
 export default function Card() {
-  const {items,handleAddItem,handleRemoveItem}=useContext(AppContaxt)
+  const { items, handleAddItem, handleRemoveItem, handleEditItem } =
+    useContext(AppContaxt);
+//orignal state
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
+  const [Price, setPrice] = useState("");
   const [image, setImage] = useState("");
+  const [Discound,setDiscound]=useState("");
+  const [Discussion,setDiscussion]=useState("");
 
-  const handleNameChange = (e) => setName(e.target.value);
-  const handleCategoryChange = (e) => setCategory(e.target.value);
 
+
+  // Add img
   const handleImgChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -27,15 +32,17 @@ export default function Card() {
       reader.readAsDataURL(file);
     }
   };
+
   const handleClick = () => {
-  if (!name || !category || !image) return; // validation
-  handleAddItem(name, category, image);
-  setName("");
-  setCategory("");
-  setImage("");
-};
-
-
+    if (!name || !Price || !image || !Discound ||! Discussion) return;
+    handleAddItem(name, Price, image,Discound,Discussion);
+    setName("");
+    setPrice("");
+    setImage("");
+    setDiscound("");
+    setDiscussion("");
+  };
+  
 
   return (
     <Container
@@ -59,42 +66,14 @@ export default function Card() {
               <thead className="table-primary">
                 <tr>
                   <th>Product Name</th>
-                  <th>Category</th>
+                  <th>Price</th>
                   <th>Image</th>
+                  <th>Discound</th>
+                  <th>Discussion</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                {items.map((data) => (
-                  <tr key={data.id} className="align-middle">
-                    <td className="fw-semibold">{data.Product}</td>
-                    <td className="text-muted">{data.Category}</td>
-                    <td>
-                      <img
-                        src={data.image}
-                        alt={data.Product}
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          objectFit: "cover",
-                          borderRadius: "6px",
-                          border: "1px solid #dee2e6",
-                        }}
-                      />
-                    </td>
-                    <td>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        className="fw-bold"
-                        onClick={() => handleRemoveItem(data.id)}
-                      >
-                        {data.Action}
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+          <EditCard/>
             </Table>
           </div>
 
@@ -104,27 +83,50 @@ export default function Card() {
 
             <Row className="align-items-end g-3">
               {/* Product Name */}
-              <Col xs={12} md={4}>
+              <Col xs={12} md={3}>
                 <Form.Group>
                   <Form.Label className="fw-semibold">Product Name</Form.Label>
                   <Form.Control
                     type="text"
                     value={name}
-                    onChange={handleNameChange}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Enter product name"
                   />
                 </Form.Group>
               </Col>
 
               {/* Category */}
-              <Col xs={12} md={3}>
+              <Col xs={12} md={2}>
                 <Form.Group>
-                  <Form.Label className="fw-semibold">Category</Form.Label>
+                  <Form.Label className="fw-semibold">Price</Form.Label>
                   <Form.Control
                     type="text"
-                    value={category}
-                    onChange={handleCategoryChange}
-                    placeholder="Enter category"
+                    value={Price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="Enter Price"
+                  />
+                </Form.Group>
+              </Col>
+              <Col xs={12} md={2}>
+                <Form.Group>
+                  <Form.Label className="fw-semibold">Discound</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={Discound}
+                    onChange={(e) => setDiscound(e.target.value)}
+                    placeholder="Enter Discound"
+                  />
+                </Form.Group>
+              </Col>
+
+               <Col xs={12} md={2}>
+                <Form.Group>
+                  <Form.Label className="fw-semibold">Discussion</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={Discussion}
+                    onChange={(e) => setDiscussion(e.target.value)}
+                    placeholder="Enter Discussion"
                   />
                 </Form.Group>
               </Col>

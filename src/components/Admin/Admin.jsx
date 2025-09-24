@@ -71,7 +71,7 @@ const Admin = ({ username }) => {
           <Plus size={16} />
           Add
         </Button>
-        <Button variant="primary" className="d-flex align-items-center gap-2">
+        <Button variant="primary" className="d-flex align-items-center gap-2" onClick={() => navigate("/Card")}>
           <Pencil size={16} />
           Edit
         </Button>

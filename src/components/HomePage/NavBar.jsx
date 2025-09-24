@@ -7,8 +7,13 @@ function NavBar(){
     {/* Navbar */}
       <Navbar bg="light" expand="lg" className="shadow-sm fixed-top">
         <Container>
-          <Navbar.Brand href="/" className="fw-bold text-success">
-            ApniShop
+           <Navbar.Brand as={Link} to="/SignIn" className="fw-bold text-success">
+            <img
+              src="/ApniShop.jpeg"       // <-- apna logo path yaha do (public folder me)
+              alt="ApniShop Logo"
+              height="40"
+               className="d-inline-block align-top rounded-circle"
+            />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">

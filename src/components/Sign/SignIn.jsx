@@ -1,12 +1,15 @@
-// SignIn.js
-import React, { useState } from "react";
+
+import React, { useContext, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "react-bootstrap-icons";
+import { AppContaxt } from "../../store/store";
 
 function SignIn() {
   
+  const { handleSignIn } = useContext(AppContaxt);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,13 +17,14 @@ function SignIn() {
 
   const HandleSignIn = (e) => {
     e.preventDefault();
-    if (email === "ashish@gmail.com" && password === "003") {
-      navigate("/Admin");
+    const result = handleSignIn(email, password);
+
+    if (result.success) {
+      navigate("/Admin"); 
     } else {
-      alert("Invalid Email or Password");
+      alert(result.message);
     }
   };
-
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 vw-100 bg-light" >
       <Card className="shadow-lg border-0 rounded-0 w-100 h-100">

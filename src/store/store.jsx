@@ -8,12 +8,14 @@ export function AppProvider({children}){
   // card funcanlity
   // card add
   const [items, setItems] = useState([]);
-  const handleAddItem = (product, category, image) => {
+  const handleAddItem = (product, Price, image,Discound,Discussion) => {
   const newitem = {
     id: Date.now(),
     Product: product,
-    Category: category,
+    Price: Price,
     image: image,
+    Discound:Discound,
+    Discussion:Discussion,
     Action: "Delete",
   };
   setItems([...items, newitem]);
@@ -24,17 +26,57 @@ const handleRemoveItem = (id) => {
   const newitem = items.filter((item) => item.id !== id);
   setItems(newitem);
 };
+// Edit item
+const handleEditItem = (id, product, Price, image,Discound,Discussion) => {
+    const updatedItems = items.map((item) =>
+      item.id === id
+        ? { ...item, Product: product, Price: Price, image: image,Discound,Discussion }
+        : item
+    );
+    setItems(updatedItems);
+  };
+
 
 // signin funcanlity
-const [Signuser,setSignuser]=useState([]);
-const handleSign=(user,password)=>{
-  
+  //  Sign in / Sign up ke liye state
+  const [users, setUsers] = useState([
+    { email: "ashish@gmail.com", password: "003" }, // demo user
+  ]);
+  const [currentUser, setCurrentUser] = useState(null);
 
-}
+  // Sign up (naya user add karna)
+  const handleSignUp = (email, password) => {
+    const exist = users.find((u) => u.email === email);
+    if (exist) {
+      return { success: false, message: "User already exists!" };
+    }
+    setUsers([...users, { email, password }]);
+    return { success: true, message: "Sign Up successful" };
+  };
 
+  // Sign in (login)
+  const handleSignIn = (email, password) => {
+    const user = users.find(
+      (u) => u.email === email && u.password === password
+    );
+    if (user) {
+      setCurrentUser(user);
+      return { success: true, message: "Login successful" };
+    }
+    return { success: false, message: "Invalid email or password" };
+  };
+
+  // Logout
+  const handleLogout = () => {
+    setCurrentUser(null);
+  };
 
 return(
-  <AppContaxt.Provider value={{ items, handleAddItem, handleRemoveItem }}>
+  <AppContaxt.Provider value={{ items, handleAddItem, handleRemoveItem ,handleEditItem  ,  users,
+        currentUser,
+        handleSignUp,
+        handleSignIn,
+        handleLogout,}}>
     {children}
   </AppContaxt.Provider>
 )
