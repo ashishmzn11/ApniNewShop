@@ -1,7 +1,15 @@
+import { useContext } from "react";
 import { Navbar, Nav, Container, Button, Row, Col } from "react-bootstrap";
 // import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AppContaxt } from "../../store/store";
 function NavBar(){
+  const {currentUser,handleLogout}=useContext(AppContaxt)
+  const  navigate =useNavigate();
+  const HandleLogout=()=>{
+    handleLogout();
+    navigate("/")
+  }
   return(
     <>
     {/* Navbar */}
@@ -22,7 +30,7 @@ function NavBar(){
               <Nav.Link href="/About">About</Nav.Link>
               <Nav.Link href="/Service">Services</Nav.Link>
               <Nav.Link href="/Contact">Contact</Nav.Link>
-              <Button as={Link} to="/SignIn" variant="outline-success" className="ms-3">Sign In</Button>
+              {currentUser?<Button onClick={HandleLogout} variant="outline-success" className="ms-3">Sign out</Button>:<Button as={Link} to="/SignIn" variant="outline-success" className="ms-3">Sign in</Button> }  
             </Nav>
           </Navbar.Collapse>
         </Container>

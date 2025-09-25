@@ -12,7 +12,7 @@ import Card from "./components/Cards/Card";
 import { useState } from "react";
 
 function App() {
-  const [username, setUsername] = useState(null);
+
 
   return (
     <Container fluid className="min-vh-100">
@@ -22,11 +22,11 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/Product" element={<Product />} />
             <Route path="/Card" element={<Card />} />
-            <Route path="/SignUp" element={<SignUp setUsername={setUsername} />} />
-            <Route path="/SignIn" element={<SignIn setUsername={setUsername} />} />
+            <Route path="/SignUp" element={<SignUp  />} />
+            <Route path="/SignIn" element={<SignIn  />} />
             <Route
               path="/Admin"
-              element={username ? <Admin username={username} /> : <Navigate to="/SignIn" />}
+              element={<Admin/>}
             />
             <Route path="/About" element={<About />} />
             <Route path="/Service" element={<Service />} />

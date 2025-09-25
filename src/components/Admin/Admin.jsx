@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { ArrowLeft, Pencil, Plus } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import { AppContaxt } from "../../store/store";
 
-const Admin = ({ username }) => {
+const Admin = () => {
   const navigate = useNavigate();
+  const{username,totalItems,totalUser}=useContext(AppContaxt);
 
   return (
     <Container
@@ -28,7 +30,7 @@ const Admin = ({ username }) => {
           <Card className="shadow-sm border-0 rounded-3 text-center">
             <Card.Body>
               <h5 className="text-muted">Total Products</h5>
-              <h3 className="fw-bold text-success display-6 mt-2">120</h3>
+              <h3 className="fw-bold text-success display-6 mt-2">{totalItems}</h3>
             </Card.Body>
           </Card>
         </Col>
@@ -46,7 +48,7 @@ const Admin = ({ username }) => {
           <Card className="shadow-sm border-0 rounded-3 text-center">
             <Card.Body>
               <h5 className="text-muted">Total Users</h5>
-              <h3 className="fw-bold text-warning display-6 mt-2">45</h3>
+              <h3 className="fw-bold text-warning display-6 mt-2">{totalUser}</h3>
             </Card.Body>
           </Card>
         </Col>

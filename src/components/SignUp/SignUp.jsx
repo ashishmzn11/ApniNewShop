@@ -8,7 +8,7 @@ import { AppContaxt } from "../../store/store";
 
 function SignUp({ setUsername }) {
   const navigate = useNavigate();
-  const { handleSignUp } = useContext(AppContaxt);
+  const { handleSignUp ,HandleUsername} = useContext(AppContaxt);
 
   const [fullname, setFullname] = useState("");
   const [email, setemail] = useState("");
@@ -19,16 +19,14 @@ function SignUp({ setUsername }) {
   // Submit handler
   const HandleSignUp = (e) => {
     e.preventDefault();
-
+    HandleUsername(fullname)
     // Confirm password check
     if (password !== conpass) {
       setError("Passwords do not match!");
       return;
     }
-
     // Call context signup method
     const result = handleSignUp(email, password);
-
     if (result.success) {
       setError("");
       setFullname("");
@@ -41,7 +39,6 @@ function SignUp({ setUsername }) {
       setError(result.message);
     }
   };
-
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 vw-100 bg-light">
       <Card className="shadow-lg border-0 rounded-0 w-100 h-100">

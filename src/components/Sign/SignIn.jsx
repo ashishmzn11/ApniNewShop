@@ -8,7 +8,7 @@ import { AppContaxt } from "../../store/store";
 
 function SignIn() {
   
-  const { handleSignIn } = useContext(AppContaxt);
+  const { handleSignIn,HandleUsername } = useContext(AppContaxt);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +18,7 @@ function SignIn() {
   const HandleSignIn = (e) => {
     e.preventDefault();
     const result = handleSignIn(email, password);
-
+// HandleUsername(email)
     if (result.success) {
       navigate("/Admin"); 
     } else {

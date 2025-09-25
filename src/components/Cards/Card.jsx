@@ -44,7 +44,7 @@ export default function Card() {
   };
   
 
-  return (
+  return (<>
     <Container
       fluid
       className="d-flex align-items-center justify-content-center min-vh-100 vh-100 vw-100 bg-light py-5"
@@ -172,9 +172,11 @@ export default function Card() {
                 />
               </div>
             )}
+            
           </BCard>
         </BCard.Body>
       </BCard>
     </Container>
+    </>
   );
 }
