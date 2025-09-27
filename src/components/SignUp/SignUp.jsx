@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { AppContaxt } from "../../store/store";
 
-function SignUp({ setUsername }) {
+function SignUp() {
   const navigate = useNavigate();
   const { handleSignUp ,HandleUsername} = useContext(AppContaxt);
 
@@ -26,7 +26,7 @@ function SignUp({ setUsername }) {
       return;
     }
     // Call context signup method
-    const result = handleSignUp(email, password);
+    const result = handleSignUp(email, password,fullname);
     if (result.success) {
       setError("");
       setFullname("");

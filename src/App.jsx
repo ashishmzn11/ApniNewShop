@@ -10,6 +10,8 @@ import Contact from "./components/Contact/Contact";
 import Product from "./components/Product/Product";
 import Card from "./components/Cards/Card";
 import { useState } from "react";
+import Profile from "./User/Profile";
+// import UserAdmin from "./components/Admin/UserAdmin";
 
 function App() {
 
@@ -33,6 +35,7 @@ function App() {
             <Route path="/Contact" element={<Contact />} />
             {/* fallback */}
             <Route path="*" element={<Navigate to="/" />} />
+            <Route path="Profile" element={<Profile/>}/>
           </Routes>
         </Col>
       </Row>

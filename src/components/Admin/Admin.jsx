@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { ArrowLeft, Pencil, Plus } from "react-bootstrap-icons";
@@ -7,7 +7,9 @@ import { AppContaxt } from "../../store/store";
 
 const Admin = () => {
   const navigate = useNavigate();
-  const{username,totalItems,totalUser}=useContext(AppContaxt);
+  const{username,totalItems,totalUser,items,currentUser}=useContext(AppContaxt);
+  // useEffect
+ 
 
   return (
     <Container
@@ -17,7 +19,7 @@ const Admin = () => {
       {/* Header */}
       <div className="text-center mb-5">
         <h1 className="fw-bold text-success display-4">
-          Welcome, {username} 👋
+          Welcome, {currentUser.email.split("@")[0]} 👋
         </h1>
         <p className="text-muted mt-2">
           Here you can manage your store easily.
@@ -30,7 +32,7 @@ const Admin = () => {
           <Card className="shadow-sm border-0 rounded-3 text-center">
             <Card.Body>
               <h5 className="text-muted">Total Products</h5>
-              <h3 className="fw-bold text-success display-6 mt-2">{totalItems}</h3>
+              <h3 className="fw-bold text-success display-6 mt-2">{items.length}</h3>
             </Card.Body>
           </Card>
         </Col>

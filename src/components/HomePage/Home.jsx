@@ -50,9 +50,11 @@ function Home() {
           </Row>
         </Container>
       </section>
+    
 
         {/* Footer */}
         <Footer/>
+      
     </>
   );
 }

@@ -1,17 +1,21 @@
-// ProductList.jsx
 import React, { useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { AppContaxt } from "../../store/store";
+import { useNavigate } from "react-router-dom";
 
 const Product = () => {
-  const { items } =
-    useContext(AppContaxt);
+  const { items } = useContext(AppContaxt);
+
+  // Sample products (agar aap backend se fetch karte ho to yaha replace karna)
+ const navigate=useNavigate()
+
+  // Add to cart handler
 
   return (
     <Container
       fluid
-      className="d-flex flex-column align-items-center justify-content-center py-5 bg-light"
+      className="d-flex flex-column align-items-center justify-content-center vh-100 vw-100 py-5 bg-light"
     >
       <h1 className="fw-bold text-success mb-4">Product Gallery</h1>
       <p className="text-muted mb-5">Explore our collection of products.</p>
@@ -34,8 +38,20 @@ const Product = () => {
                   <Card.Text className="text-muted mb-1">
                     {pro.Category}
                   </Card.Text>
+                  <Card.Text className="text-success fw-bold mb-2">
+                    ₹ {pro.Price} ({pro.Discound} Off)
+                  </Card.Text>
+                  <Card.Text className="text-muted mb-2">
+                    {pro.Discussion}
+                  </Card.Text>
 
-                  {/* Sirf Admin ko Edit/Delete dikhana hai */}
+                  {/* Add to Cart Button */}
+                  <Button
+                    variant="success"
+                    
+                  >
+                    Add to Cart
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>
