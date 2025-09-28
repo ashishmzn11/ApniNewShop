@@ -20,7 +20,7 @@ function SignIn() {
     const result = handleSignIn(email, password);
 // HandleUsername(email)
     if (result.success) {
-      navigate("/Admin"); 
+      navigate("/Profile"); 
     } else {
       alert(result.message);
     }

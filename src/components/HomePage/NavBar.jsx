@@ -20,7 +20,7 @@ function NavBar() {
   return (
     <Navbar bg="light" expand="lg" className="shadow-sm fixed-top">
       <Container>
-        <Navbar.Brand as={Link} to="/SignIn" className="fw-bold text-success">
+        <Navbar.Brand as={Link} to="/AdminLogin" className="fw-bold text-success">
           <img
             src="/ApniShop.jpeg"
             alt="ApniShop Logo"

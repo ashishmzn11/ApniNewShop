@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 
 function EditCard(){
-  const {handleEditItem,items,handleRemoveItem}=useContext(AppContaxt);
+  const {handleEditProduct,items,handleRemoveProduct}=useContext(AppContaxt);
   // edit State
   // useState
   const [editId, setEditId] = useState(null); 
@@ -33,7 +33,7 @@ function EditCard(){
     
       // edited data
       const handleSave = () => {
-        handleEditItem(editId, editName, editPrice, editImage,editDiscound,editDiscussion);
+        handleEditProduct(editId, editName, editPrice, editImage,editDiscound,editDiscussion);
         setEditId(null);
         setEditName("");
         setEditPrice("");
@@ -179,7 +179,7 @@ return(<>
                             variant="danger"
                             size="sm"
                             className="fw-bold"
-                            onClick={() => handleRemoveItem(data.id)}
+                            onClick={() => handleRemoveProduct(data.id)}
                           >
                             Delete
                           </Button>

@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import Home from "./components/HomePage/Home";
 import SignUp from "./components/SignUp/SignUp";
 import SignIn from "./components/Sign/SignIn";
-import Admin from "./components/Admin/Admin";
+// import Admin from "./components/Admin/Admin";
 import About from "./components/About/About";
 import Service from "./components/Service/Service";
 import Contact from "./components/Contact/Contact";
@@ -11,6 +11,8 @@ import Product from "./components/Product/Product";
 import Card from "./components/Cards/Card";
 import { useState } from "react";
 import Profile from "./User/Profile";
+import Admin from "./components/Admin/Admin";
+import AdminLogin from "./components/Admin/AdminLogin";
 // import UserAdmin from "./components/Admin/UserAdmin";
 
 function App() {
@@ -35,7 +37,8 @@ function App() {
             <Route path="/Contact" element={<Contact />} />
             {/* fallback */}
             <Route path="*" element={<Navigate to="/" />} />
-            <Route path="Profile" element={<Profile/>}/>
+            <Route path="/Profile" element={<Profile/>}/>
+            <Route path="/AdminLogin" element={<AdminLogin/>}></Route>
           </Routes>
         </Col>
       </Row>

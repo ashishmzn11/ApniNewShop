@@ -12,7 +12,7 @@ import { AppContaxt } from "../../store/store";
 import EditCard from "./EditCard";
 
 export default function Card() {
-  const { items, handleAddItem, handleRemoveItem, handleEditItem } =
+  const { items, handleAddProduct} =
     useContext(AppContaxt);
 //orignal state
   const [name, setName] = useState("");
@@ -35,7 +35,7 @@ export default function Card() {
 
   const handleClick = () => {
     if (!name || !Price || !image || !Discound ||! Discussion) return;
-    handleAddItem(name, Price, image,Discound,Discussion);
+    handleAddProduct(name, Price, image,Discound,Discussion);
     setName("");
     setPrice("");
     setImage("");

@@ -19,7 +19,7 @@ export function AppProvider({ children }) {
   const totalUser = users.length;
 
   // ==============================
-  // Items / Cart
+  // Items / Products
   // ==============================
   const [items, setItems] = useState(() => {
     const saved = localStorage.getItem("items");
@@ -27,79 +27,107 @@ export function AppProvider({ children }) {
   });
 
   // ==============================
-  // User-specific items
+  // User-specific Cart Items
   // ==============================
   const userItems = items.filter(item => currentUser && item.userEmail === currentUser.email);
   const totalItems = userItems.length;
 
   // ==============================
-  // Add Item (User-specific)
+  // Admin: Add Product
   // ==============================
-  const handleAddItem = (product, Price, image, Discound, Discussion) => {
-    
-    const newItem = {
+  const handleAddProduct = (Product, Price, image, Discound, Discussion) => {
+    if (!localStorage.getItem("adminAuth")) {
+      alert("Only admin can add products");
+      return;
+    }
+
+    const newProduct = {
       id: Date.now(),
-      Product: product,
+      Product,
       Price,
       image,
       Discound,
       Discussion,
-      Action: "Delete",
-// Associate item with current user
+      userEmail: null // global product
     };
 
-    setItems(prev => {
-      // Prevent duplicate items for same user
-      const exists = prev.find(
-        item => item.Product === product && item.userEmail === currentUser.email
-      );
-      if (exists) return prev;
-      return [...prev, newItem];
-    });
+    setItems(prev => [...prev, newProduct]);
   };
 
   // ==============================
-  // Remove Item (User-specific)
+  // Admin: Edit Product
   // ==============================
-  const handleRemoveItem = (id) => {
-    if (!currentUser) {
-      alert("Please sign in first");
+  const handleEditProduct = (id, Product, Price, image, Discound, Discussion) => {
+    if (!localStorage.getItem("adminAuth")) {
+      alert("Only admin can edit products");
       return;
     }
 
     setItems(prev =>
-      prev.filter(item => !(item.id === id && item.userEmail === currentUser.email))
-    );
-  };
-
-  // ==============================
-  // Edit Item (User-specific)
-  // ==============================
-  const handleEditItem = (id, product, Price, image, Discound, Discussion) => {
-    if (!currentUser) return;
-
-    setItems(prev =>
       prev.map(item =>
-        item.id === id && item.userEmail === currentUser.email
-          ? { ...item, Product: product, Price, image, Discound, Discussion }
+        item.id === id
+          ? { ...item, Product, Price, image, Discound, Discussion }
           : item
       )
     );
   };
 
   // ==============================
-  // Persist Items to localStorage
+  // Admin: Remove Product
   // ==============================
-  useEffect(() => {
-    try {
-      localStorage.setItem("items", JSON.stringify(items));
-    } catch (e) {
-      console.error("LocalStorage full! Cannot save items.");
+  const handleRemoveProduct = (id) => {
+    if (!localStorage.getItem("adminAuth")) {
+      alert("Only admin can remove products");
+      return;
     }
-  }, [items]);
 
+    setItems(prev => prev.filter(item => item.id !== id));
+  };
+
+  
+
+
+// User Cart Items
+const [cartItems, setCartItems] = useState(() => {
+  const saved = localStorage.getItem("cartItems");
+  return saved ? JSON.parse(saved) : [];
+});
+
+  // User: Add to Cart
+const handleAddToCart = (product) => {
+  if (!currentUser) {
+    alert("Please sign in first");
+    return;
+  }
+
+  // User ke liye sirf cart me add karo
+  const cartItem = {
+    id: Date.now(),           // unique ID for cart
+    Product: product.Product,
+    Price: product.Price,
+    image: product.image,
+    Discound: product.Discound,
+    Discussion: product.Discussion,
+    userEmail: currentUser.email // ye sirf current user ke liye hai
+  };
+setCartItems(prev => [...prev, cartItem]);
+};
+
+
+//User: Remove to cart
+const handleRemoveToCard = (id) => {
+  setCartItems(prev => prev.filter(item => !(item.id === id && item.userEmail === currentUser.email)));
+};
+useEffect(() => {
+  localStorage.setItem("cartItems", JSON.stringify(cartItems));
+}, [cartItems]);
+
+
+
+
+  
   // ==============================
-  // Sign Up
+  // Sign Up / Sign In / Logout
   // ==============================
   const handleSignUp = (email, password) => {
     const exist = users.find(u => u.email === email);
@@ -110,9 +138,6 @@ export function AppProvider({ children }) {
     return { success: true, message: "Sign Up successful" };
   };
 
-  // ==============================
-  // Sign In
-  // ==============================
   const handleSignIn = (email, password) => {
     const user = users.find(u => u.email === email && u.password === password);
     if (user) {
@@ -123,35 +148,47 @@ export function AppProvider({ children }) {
     return { success: false, message: "Invalid email or password" };
   };
 
-  // ==============================
-  // Logout
-  // ==============================
   const handleLogout = () => {
     setCurrentUser(null);
     localStorage.removeItem("currentUser");
   };
 
   // ==============================
-  // Persist Users to localStorage
+  // Persist Items & Users
   // ==============================
+  useEffect(() => {
+    localStorage.setItem("items", JSON.stringify(items));
+  }, [items]);
+
   useEffect(() => {
     localStorage.setItem("users", JSON.stringify(users));
   }, [users]);
 
   // ==============================
-  // Username (Admin welcome)
+  // Username / Admin Login
   // ==============================
   const [username, setUsername] = useState("");
   const HandleUsername = (name) => setUsername(name);
+
+  const handleAdminLogin = (email, password) => {
+    if (email === "ashishadmin11@gmail.com" && password === "Ashish0123") {
+      localStorage.setItem("adminAuth", true);
+      return { success: true, message: "Login successful" };
+    } else {
+      return { success: false, message: "Invalid Admin Credentials" };
+    }
+  };
 
   return (
     <AppContaxt.Provider
       value={{
         items,
-        userItems,          // user-specific items
-        handleAddItem,
-        handleRemoveItem,
-        handleEditItem,
+        userItems,
+        handleAddProduct,
+        handleEditProduct,
+        handleRemoveProduct,
+        handleAddToCart,
+        handleRemoveToCard,
         users,
         currentUser,
         handleSignUp,
@@ -161,6 +198,8 @@ export function AppProvider({ children }) {
         HandleUsername,
         totalItems,
         totalUser,
+        handleAdminLogin,
+        cartItems
       }}
     >
       {children}

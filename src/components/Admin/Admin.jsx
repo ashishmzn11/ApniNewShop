@@ -7,7 +7,7 @@ import { AppContaxt } from "../../store/store";
 
 const Admin = () => {
   const navigate = useNavigate();
-  const{username,totalItems,totalUser,items,currentUser}=useContext(AppContaxt);
+  const{totalUser,items,currentUser}=useContext(AppContaxt);
   // useEffect
  
 
@@ -19,7 +19,7 @@ const Admin = () => {
       {/* Header */}
       <div className="text-center mb-5">
         <h1 className="fw-bold text-success display-4">
-          Welcome, {currentUser.email.split("@")[0]} 👋
+          Welcome, {currentUser ? currentUser.email : "Admin"}👋
         </h1>
         <p className="text-muted mt-2">
           Here you can manage your store easily.
