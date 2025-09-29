@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 
 function EditCard(){
-  const {handleEditProduct,items,handleRemoveProduct}=useContext(AppContaxt);
+  const {handleEditProduct,items, handleRemoveProduct}=useContext(AppContaxt);
   // edit State
   // useState
   const [editId, setEditId] = useState(null); 
@@ -61,6 +61,7 @@ function EditCard(){
     }
   };
 return(<>
+
     <tbody>
                 {items.map((data) => (
                   <tr key={data.id} className="align-middle">
@@ -188,6 +189,7 @@ return(<>
                     </td>
                   </tr>
                 ))}
+                
               </tbody>
 </>)
 }

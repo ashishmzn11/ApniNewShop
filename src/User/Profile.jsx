@@ -1,76 +1,117 @@
 import React, { useContext } from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Image } from "react-bootstrap";
+// import { AppContaxt } from "../../store/store";
+import { useNavigate } from "react-router-dom";
 import { AppContaxt } from "../store/store";
 
 const Profile = () => {
-  const { currentUser, cartItems, handleRemoveToCard } = useContext(AppContaxt);
+  const { cartItems, handleRemoveToCard, currentUser,handleUpdateQuantity }=useContext(AppContaxt)
+  const navigate = useNavigate();
+
+  // Total Price calculate
+  const totalPrice = cartItems.reduce(
+    (acc, item) => acc + Number(item.Price) * (item.quantity || 1),
+    0
+  );
 
   if (!currentUser) {
     return (
-      <Container className="d-flex justify-content-center align-items-center vh-100 vw-100 bg-light">
-        <h3 className="text-danger text-center">⚠️ Please sign in to view your profile</h3>
+      <Container className="py-5 text-center">
+        <h3 className="text-danger">Please sign in to view your orders</h3>
+        <Button variant="primary" onClick={() => navigate("/signin")}>
+          Go to Sign In
+        </Button>
       </Container>
     );
   }
 
-  const totalAmount = cartItems.reduce((sum, item) => sum + Number(item.Price), 0);
-  const totalDiscount = cartItems.reduce((sum, item) => sum + Number(item.Discound), 0);
-
   return (
-    <Container className="d-flex flex-column align-items-center justify-content-center overflow-auto mb-5 vw-100 py-5 bg-light">
-      <div className="text-center mb-5">
-        <h2 className="fw-bold">Welcome, {currentUser.email.split("@")[0]}!</h2>
-        <h5 className="text-muted">Your Products in Cart</h5>
-      </div>
-      {cartItems.length > 0 && (
-        <Card className="shadow-sm mb-4 mx-auto" style={{ maxWidth: "500px" }}>
-          <Card.Body className="d-flex justify-content-between align-items-center">
-            <div>
-              <h5 className="mb-1 fw-bold">Total Amount:</h5>
-              <p className="mb-0 text-success fw-bold">₹ {totalAmount}</p>
-            </div>
-            <div>
-              <h5 className="mb-1 fw-bold">Total Discount:</h5>
-              <p className="mb-0 text-danger fw-bold">₹ {totalDiscount}</p>
-            </div>
-          </Card.Body>
-        </Card>
-      )}
+    <Container fluid className="d-flex flex-column align-items-center justify-content-center overflow-auto mb-5 vw-100 py-5 bg-light">
+      <h1 className="text-center text-success fw-bold mb-5">Your Orders</h1>
 
       {cartItems.length === 0 ? (
-        <p className="text-center text-muted">You have not added any products yet.</p>
+        <p className="text-center text-muted">Your cart is empty.</p>
       ) : (
-        <Row className="g-4">
+        <Row className="g-4 justify-content-center">
           {cartItems.map((item) => (
-            <Col key={item.id} xs={12} sm={6} md={4} lg={3}>
-              <Card className="shadow-sm h-100 d-flex flex-column">
-                <Card.Img
-                  variant="top"
+            <Col xs={12} md={8} lg={6} key={item.id}>
+              <Card className="shadow-sm p-3 d-flex flex-row align-items-center">
+                <Image
                   src={item.image}
-                  style={{ height: "200px", objectFit: "cover" }}
+                  alt={item.Product}
+                  rounded
+                  style={{ width: "80px", height: "80px", objectFit: "cover" }}
                 />
-                <Card.Body className="d-flex flex-column justify-content-between">
-                  <div>
-                    <Card.Title>{item.Product}</Card.Title>
-                    <Card.Text className="text-success fw-bold mb-1">₹ {item.Price}</Card.Text>
-                    <Card.Text className="text-muted mb-2">Discount: {item.Discound}</Card.Text>
-                    <Card.Text className="text-muted">{item.Discussion}</Card.Text>
+
+                <div className="ms-3 flex-grow-1">
+                  <h5 className="fw-bold mb-1">{item.Product}</h5>
+                  <p className="mb-1 text-success fw-semibold">
+                    ₹ {(item.Price)*(item.quantity)} ({(item.Discound)*(item.quantity)} Off)
+                  </p>
+                  <p className="mb-1 text-muted">{item.quantity}</p>
+
+                  {/* Quantity controls */}
+                  <div className="d-flex align-items-center gap-2 mt-2">
+                    <Button
+                      size="sm"
+                      variant="outline-secondary"
+                        onClick={() =>
+                        handleUpdateQuantity(item.id, (item.quantity || 1) - 1)
+                      }
+                      disabled={(item.quantity || 1) <= 1}
+                    >
+                      -
+                    </Button>
+                    <span>{item.quantity || 1}</span>
+                    <Button
+                      size="sm"
+                      variant="outline-secondary"
+                        onClick={() =>
+                        handleUpdateQuantity(item.id, (item.quantity || 1) +1)
+                      }
+                    >
+                      +
+                    </Button>
                   </div>
-                  <Button
-                    variant="danger"
-                    className="mt-auto"
-                    onClick={() => handleRemoveToCard(item.id)}
-                  >
-                    Remove from Cart
-                  </Button>
-                </Card.Body>
+                </div>
+
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleRemoveToCard(item.id)}
+                >
+                  Remove
+                </Button>
+
               </Card>
             </Col>
           ))}
+
+          {/* Total Price + Checkout */}
+          <Col xs={12} md={8} lg={6}>
+            <Card className="shadow-sm p-3 d-flex justify-content-between align-items-center flex-row">
+              <h5 className="fw-bold mb-0">Total: ₹ {totalPrice}</h5>
+              <Button
+                variant="success"
+                className="fw-bold px-4"
+                onClick={()=>navigate("/CheckOut")}
+              >
+                Checkout
+              </Button>
+            </Card>
+          </Col>
         </Row>
       )}
+
+      <div className="text-center mt-4">
+        <Button variant="outline-secondary" onClick={() => navigate("/Product")}>
+          Back to Product
+        </Button>
+      </div>
     </Container>
   );
 };
+
+// export default Order;
 
 export default Profile;

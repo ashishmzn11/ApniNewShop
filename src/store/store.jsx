@@ -95,10 +95,6 @@ const [cartItems, setCartItems] = useState(() => {
 
   // User: Add to Cart
 const handleAddToCart = (product) => {
-  if (!currentUser) {
-    alert("Please sign in first");
-    return;
-  }
 
   // User ke liye sirf cart me add karo
   const cartItem = {
@@ -179,6 +175,29 @@ useEffect(() => {
     }
   };
 
+// ==============================
+// User increse decrese product quantity
+// ==============================
+const handleUpdateQuantity = (id, quantity) => {
+  setCartItems((prev) =>
+    prev.map((item) =>
+      item.id === id ? { ...item, quantity: Math.max(quantity, 1) } : item
+    )
+  );
+};
+
+
+  const handlePlaceOrder = ({ name, email, address, phone, cartItems, totalPrice, navigate }) => {
+      if (!name|| !email || !address || !phone) {
+        alert("Please fill all fields");
+        return;
+      }
+      alert(`Order placed successfully! Total: ₹ ${totalPrice}`);
+      navigate("/");
+    };
+
+
+
   return (
     <AppContaxt.Provider
       value={{
@@ -199,7 +218,9 @@ useEffect(() => {
         totalItems,
         totalUser,
         handleAdminLogin,
-        cartItems
+        cartItems,
+        handleUpdateQuantity,
+        handlePlaceOrder
       }}
     >
       {children}

@@ -13,6 +13,8 @@ import { useState } from "react";
 import Profile from "./User/Profile";
 import Admin from "./components/Admin/Admin";
 import AdminLogin from "./components/Admin/AdminLogin";
+// import Order from "./components/Order/Order";
+import CheckOut from "./components/Order/CheckOut";
 // import UserAdmin from "./components/Admin/UserAdmin";
 
 function App() {
@@ -39,6 +41,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
             <Route path="/Profile" element={<Profile/>}/>
             <Route path="/AdminLogin" element={<AdminLogin/>}></Route>
+            <Route path="/CheckOut" element={<CheckOut/>}></Route>
           </Routes>
         </Col>
       </Row>
