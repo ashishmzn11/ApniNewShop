@@ -9,6 +9,7 @@ const Product = () => {
   const { items, cartItems, handleAddToCart, handleRemoveToCard, currentUser } =
     useContext(AppContaxt);
   const navigate = useNavigate();
+  
 
   // Add to cart handler with sign-in check
   const handleAddToCartin = (product) => {

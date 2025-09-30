@@ -1,15 +1,13 @@
 import React, { useContext } from "react";
 import { Container, Row, Col, Card, Button, Image } from "react-bootstrap";
-// import { AppContaxt } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 import { AppContaxt } from "../store/store";
 
 const Profile = () => {
-  const { cartItems, handleRemoveToCard, currentUser,handleUpdateQuantity }=useContext(AppContaxt)
+  const { userCartItems, handleRemoveToCard, currentUser, handleUpdateQuantity } = useContext(AppContaxt);
   const navigate = useNavigate();
 
-  // Total Price calculate
-  const totalPrice = cartItems.reduce(
+  const totalPrice = userCartItems.reduce(
     (acc, item) => acc + Number(item.Price) * (item.quantity || 1),
     0
   );
@@ -29,11 +27,11 @@ const Profile = () => {
     <Container fluid className="d-flex flex-column align-items-center justify-content-center overflow-auto mb-5 vw-100 py-5 bg-light">
       <h1 className="text-center text-success fw-bold mb-5">Your Orders</h1>
 
-      {cartItems.length === 0 ? (
+      {userCartItems.length === 0 ? (
         <p className="text-center text-muted">Your cart is empty.</p>
       ) : (
         <Row className="g-4 justify-content-center">
-          {cartItems.map((item) => (
+          {userCartItems.map((item) => (
             <Col xs={12} md={8} lg={6} key={item.id}>
               <Card className="shadow-sm p-3 d-flex flex-row align-items-center">
                 <Image
@@ -42,22 +40,18 @@ const Profile = () => {
                   rounded
                   style={{ width: "80px", height: "80px", objectFit: "cover" }}
                 />
-
                 <div className="ms-3 flex-grow-1">
                   <h5 className="fw-bold mb-1">{item.Product}</h5>
                   <p className="mb-1 text-success fw-semibold">
-                    ₹ {(item.Price)*(item.quantity)} ({(item.Discound)*(item.quantity)} Off)
+                    ₹ {(item.Price) * (item.quantity)} ({(item.Discound) * (item.quantity)} Off)
                   </p>
-                  <p className="mb-1 text-muted">{item.quantity}</p>
+                  <p className="mb-1 text-muted">Quantity: {item.quantity}</p>
 
-                  {/* Quantity controls */}
                   <div className="d-flex align-items-center gap-2 mt-2">
                     <Button
                       size="sm"
                       variant="outline-secondary"
-                        onClick={() =>
-                        handleUpdateQuantity(item.id, (item.quantity || 1) - 1)
-                      }
+                      onClick={() => handleUpdateQuantity(item.id, (item.quantity) - 1)}
                       disabled={(item.quantity || 1) <= 1}
                     >
                       -
@@ -66,9 +60,7 @@ const Profile = () => {
                     <Button
                       size="sm"
                       variant="outline-secondary"
-                        onClick={() =>
-                        handleUpdateQuantity(item.id, (item.quantity || 1) +1)
-                      }
+                      onClick={() => handleUpdateQuantity(item.id, (item.quantity) + 1)}
                     >
                       +
                     </Button>
@@ -82,19 +74,17 @@ const Profile = () => {
                 >
                   Remove
                 </Button>
-
               </Card>
             </Col>
           ))}
 
-          {/* Total Price + Checkout */}
           <Col xs={12} md={8} lg={6}>
             <Card className="shadow-sm p-3 d-flex justify-content-between align-items-center flex-row">
               <h5 className="fw-bold mb-0">Total: ₹ {totalPrice}</h5>
               <Button
                 variant="success"
                 className="fw-bold px-4"
-                onClick={()=>navigate("/CheckOut")}
+                onClick={() => navigate("/CheckOut")}
               >
                 Checkout
               </Button>
@@ -111,7 +101,5 @@ const Profile = () => {
     </Container>
   );
 };
-
-// export default Order;
 
 export default Profile;

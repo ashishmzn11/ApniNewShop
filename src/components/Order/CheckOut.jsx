@@ -3,8 +3,10 @@ import { Container, Row, Col, Card, Button, Form, Table } from "react-bootstrap"
 import { AppContaxt } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 
+
+
 const CheckOut = () => {
-  const { cartItems, currentUser, handlePlaceOrder } = useContext(AppContaxt);
+  const { userCartItems, currentUser, handlePlaceOrder } = useContext(AppContaxt);
   const navigate = useNavigate();
 
   const [name, setName] = useState(currentUser?.name || "");
@@ -12,7 +14,7 @@ const CheckOut = () => {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
 
-  const totalPrice = cartItems.reduce(
+  const totalPrice = userCartItems.reduce(
     (acc, item) => acc + Number(item.Price) * (item.quantity || 1),
     0
   );
@@ -27,6 +29,7 @@ const CheckOut = () => {
       </Container>
     );
   }
+
 
   return (
     <Container fluid className="d-flex flex-column align-items-center justify-content-center overflow-auto mb-5 vw-100 py-5 bg-light">
@@ -46,14 +49,14 @@ const CheckOut = () => {
                 </tr>
               </thead>
               <tbody>
-                {cartItems.length === 0 ? (
+                {userCartItems.length === 0 ? (
                   <tr>
                     <td colSpan="3" className="text-muted">
                       Your cart is empty
                     </td>
                   </tr>
                 ) : (
-                  cartItems.map((item) => (
+                  userCartItems.map((item) => (
                     <tr key={item.id}>
                       <td className="text-start">{item.Product}</td>
                       <td>{item.quantity || 1}</td>
@@ -61,7 +64,7 @@ const CheckOut = () => {
                     </tr>
                   ))
                 )}
-                {cartItems.length > 0 && (
+                {userCartItems.length > 0 && (
                   <tr>
                     <td colSpan="2" className="fw-bold text-end">
                       Total
@@ -124,9 +127,9 @@ const CheckOut = () => {
                 variant="success"
                 className="w-100 fw-bold mb-2"
                 size="lg"
-                onClick={() =>
-                  handlePlaceOrder({ name, email, address, phone, cartItems, totalPrice, navigate })
-                }
+                 onClick={() =>
+    handlePlaceOrder({ name, email, address, phone, totalPrice, navigate })
+  }
               >
                 Place Order
               </Button>

@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import emailjs from '@emailjs/browser';
+// emailjs.init("yfJXYdjqOyFsyx4W2");
 
 export const AppContaxt = createContext();
 
@@ -27,13 +29,20 @@ export function AppProvider({ children }) {
   });
 
   // ==============================
-  // User-specific Cart Items
+  // Cart Items
   // ==============================
-  const userItems = items.filter(item => currentUser && item.userEmail === currentUser.email);
-  const totalItems = userItems.length;
+  const [cartItems, setCartItems] = useState(() => {
+    const saved = localStorage.getItem("cartItems");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   // ==============================
-  // Admin: Add Product
+  // User-specific Cart Items
+  // ==============================
+  const userCartItems = cartItems.filter(item => currentUser && item.userEmail === currentUser.email);
+
+  // ==============================
+  // Admin: Add / Edit / Remove Product
   // ==============================
   const handleAddProduct = (Product, Price, image, Discound, Discussion) => {
     if (!localStorage.getItem("adminAuth")) {
@@ -54,9 +63,6 @@ export function AppProvider({ children }) {
     setItems(prev => [...prev, newProduct]);
   };
 
-  // ==============================
-  // Admin: Edit Product
-  // ==============================
   const handleEditProduct = (id, Product, Price, image, Discound, Discussion) => {
     if (!localStorage.getItem("adminAuth")) {
       alert("Only admin can edit products");
@@ -72,9 +78,6 @@ export function AppProvider({ children }) {
     );
   };
 
-  // ==============================
-  // Admin: Remove Product
-  // ==============================
   const handleRemoveProduct = (id) => {
     if (!localStorage.getItem("adminAuth")) {
       alert("Only admin can remove products");
@@ -84,44 +87,103 @@ export function AppProvider({ children }) {
     setItems(prev => prev.filter(item => item.id !== id));
   };
 
-  
+  // ==============================
+  // User: Add / Remove / Update Quantity
+  // ==============================
+  const handleAddToCart = (product) => {
+    if (!currentUser) return;
 
+    const existing = cartItems.find(
+      item => item.Product === product.Product && item.userEmail === currentUser.email
+    );
 
-// User Cart Items
-const [cartItems, setCartItems] = useState(() => {
-  const saved = localStorage.getItem("cartItems");
-  return saved ? JSON.parse(saved) : [];
-});
-
-  // User: Add to Cart
-const handleAddToCart = (product) => {
-
-  // User ke liye sirf cart me add karo
-  const cartItem = {
-    id: Date.now(),           // unique ID for cart
-    Product: product.Product,
-    Price: product.Price,
-    image: product.image,
-    Discound: product.Discound,
-    Discussion: product.Discussion,
-    userEmail: currentUser.email // ye sirf current user ke liye hai
+    if (existing) {
+      setCartItems(prev =>
+        prev.map(item =>
+          item.id === existing.id
+            ? { ...item, quantity: (item.quantity || 1) + 1 }
+            : item
+        )
+      );
+    } else {
+      const cartItem = {
+        id: Date.now(),
+        Product: product.Product,
+        Price: product.Price,
+        image: product.image,
+        Discound: product.Discound,
+        Discussion: product.Discussion,
+        userEmail: currentUser.email,
+        quantity: 1
+      };
+      setCartItems(prev => [...prev, cartItem]);
+    }
   };
-setCartItems(prev => [...prev, cartItem]);
-};
 
+  const handleRemoveToCard = (id) => {
+    setCartItems(prev =>
+      prev.reduce((acc, item) => {
+        if (item.id === id && item.userEmail === currentUser.email) {
+          if ((item.quantity || 1) > 1) {
+            acc.push({ ...item, quantity: item.quantity - 1 });
+          }
+        } else {
+          acc.push(item);
+        }
+        return acc;
+      }, [])
+    );
+  };
 
-//User: Remove to cart
-const handleRemoveToCard = (id) => {
-  setCartItems(prev => prev.filter(item => !(item.id === id && item.userEmail === currentUser.email)));
-};
-useEffect(() => {
-  localStorage.setItem("cartItems", JSON.stringify(cartItems));
-}, [cartItems]);
+  const handleUpdateQuantity = (id, quantity) => {
+    setCartItems(prev =>
+      prev.map(item =>
+        item.id === id ? { ...item, quantity: Math.max(quantity, 1) } : item
+      )
+    );
+  };
+
+  const clearCart = () => {
+    setCartItems(prev => prev.filter(item => item.userEmail !== currentUser.email));
+  };
 
 
 
 
   
+const handlePlaceOrder = ({ name, email, address, phone, totalPrice, navigate }) => {
+  if (!name || !email || !address || !phone) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  const templateParams = {
+    name,
+    email,
+    address,
+    phone,
+    totalPrice
+  };
+
+  emailjs.send(
+    "service_brhsp0e",    // EmailJS service ID
+    "template_hj9paf1",   // EmailJS template ID
+    templateParams,
+    "pm4CSGMZiBMkTGHIJ"    // EmailJS public key
+  ).then(
+    (response) => {
+      alert('Order placed successfully! Confirmation email sent.');
+      clearCart();        // Cart clear
+      navigate("/");      // Redirect to home
+    },
+    (error) => {
+      alert('Order placed but email failed.');
+      clearCart();
+      navigate("/");
+    }
+  );
+};
+
   // ==============================
   // Sign Up / Sign In / Logout
   // ==============================
@@ -129,8 +191,7 @@ useEffect(() => {
     const exist = users.find(u => u.email === email);
     if (exist) return { success: false, message: "User already exists!" };
 
-    const updatedUsers = [...users, { email, password }];
-    setUsers(updatedUsers);
+    setUsers(prev => [...prev, { email, password }]);
     return { success: true, message: "Sign Up successful" };
   };
 
@@ -150,22 +211,23 @@ useEffect(() => {
   };
 
   // ==============================
-  // Persist Items & Users
+  // Persist Data
   // ==============================
   useEffect(() => {
     localStorage.setItem("items", JSON.stringify(items));
   }, [items]);
 
   useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  useEffect(() => {
     localStorage.setItem("users", JSON.stringify(users));
   }, [users]);
 
   // ==============================
-  // Username / Admin Login
+  // Admin Login
   // ==============================
-  const [username, setUsername] = useState("");
-  const HandleUsername = (name) => setUsername(name);
-
   const handleAdminLogin = (email, password) => {
     if (email === "ashishadmin11@gmail.com" && password === "Ashish0123") {
       localStorage.setItem("adminAuth", true);
@@ -175,52 +237,36 @@ useEffect(() => {
     }
   };
 
-// ==============================
-// User increse decrese product quantity
-// ==============================
-const handleUpdateQuantity = (id, quantity) => {
-  setCartItems((prev) =>
-    prev.map((item) =>
-      item.id === id ? { ...item, quantity: Math.max(quantity, 1) } : item
-    )
-  );
-};
-
-
-  const handlePlaceOrder = ({ name, email, address, phone, cartItems, totalPrice, navigate }) => {
-      if (!name|| !email || !address || !phone) {
-        alert("Please fill all fields");
-        return;
-      }
-      alert(`Order placed successfully! Total: ₹ ${totalPrice}`);
-      navigate("/");
-    };
-
-
+  // ==============================
+  // Username
+  // ==============================
+  const [username, setUsername] = useState("");
+  const HandleUsername = (name) => setUsername(name);
 
   return (
     <AppContaxt.Provider
       value={{
         items,
-        userItems,
+        cartItems,
+        userCartItems,
         handleAddProduct,
         handleEditProduct,
         handleRemoveProduct,
         handleAddToCart,
         handleRemoveToCard,
+        handleUpdateQuantity,
+        clearCart,
+        handlePlaceOrder,
         users,
         currentUser,
         handleSignUp,
         handleSignIn,
         handleLogout,
-        username,
-        HandleUsername,
-        totalItems,
+        totalItems: userCartItems.length,
         totalUser,
         handleAdminLogin,
-        cartItems,
-        handleUpdateQuantity,
-        handlePlaceOrder
+        username,
+        HandleUsername
       }}
     >
       {children}
