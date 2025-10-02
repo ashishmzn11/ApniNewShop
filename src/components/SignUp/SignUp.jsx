@@ -10,27 +10,29 @@ function SignUp() {
   const navigate = useNavigate();
   const { handleSignUp ,HandleUsername} = useContext(AppContaxt);
 
-  const [fullname, setFullname] = useState("");
+  const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [conpass, setconpass] = useState("");
   const [error, setError] = useState("");
+  const [phone, setphone] = useState("");
 
   // Submit handler
   const HandleSignUp = (e) => {
     e.preventDefault();
-    HandleUsername(fullname)
+    HandleUsername(name)
     // Confirm password check
     if (password !== conpass) {
       setError("Passwords do not match!");
       return;
     }
     // Call context signup method
-    const result = handleSignUp(email, password,fullname);
+    const result = handleSignUp(email, password,name,phone);
     if (result.success) {
       setError("");
-      setFullname("");
+      setname("");
       setemail("");
+      setphone("");
       setpassword("");
       setconpass("");
       // Navigate to SignIn page
@@ -56,8 +58,8 @@ function SignUp() {
                 <Form.Control
                   type="text"
                   placeholder="Enter your full name"
-                  value={fullname}
-                  onChange={(e) => setFullname(e.target.value)}
+                  value={name}
+                  onChange={(e) => setname(e.target.value)}
                   required
                 />
               </Form.Group>
@@ -70,6 +72,20 @@ function SignUp() {
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setemail(e.target.value)}
+                  required
+                />
+                {/* phone */}
+              </Form.Group>
+              <Form.Group controlId="formphone" className="mb-3">
+                <Form.Label>Contact Number</Form.Label>
+                <Form.Control
+                  type=""
+                  pattern="[0-9]{10}"
+                  maxLength={10}
+                  placeholder="Enter your phone number"
+                  value={phone}
+                   onChange={(e) => { const onlyNums = e.target.value.replace(/\D/g, "");
+                   setphone(onlyNums); }}
                   required
                 />
               </Form.Group>

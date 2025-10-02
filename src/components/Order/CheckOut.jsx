@@ -9,10 +9,10 @@ const CheckOut = () => {
   const { userCartItems, currentUser, handlePlaceOrder } = useContext(AppContaxt);
   const navigate = useNavigate();
 
-  const [name, setName] = useState(currentUser?.name || "");
-  const [email, setEmail] = useState(currentUser?.email || "");
+  const [name, setName] = useState(currentUser?.username);
+  const [email, setEmail] = useState(currentUser?.email);
   const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(currentUser?.phone);
 
   const totalPrice = userCartItems.reduce(
     (acc, item) => acc + Number(item.Price) * (item.quantity || 1),
@@ -117,9 +117,12 @@ const CheckOut = () => {
                 <Form.Label>Phone</Form.Label>
                 <Form.Control
                   type="tel"
+                  pattern="[0-9]{10}"
+                  maxLength={10}
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Enter your phone number"
+                   onChange={(e) => { const onlyNums = e.target.value.replace(/\D/g, "");
+                   setPhone(onlyNums); }}
+                  required
                 />
               </Form.Group>
 

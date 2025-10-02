@@ -106,7 +106,7 @@ export default function Card() {
                 <Form.Group>
                   <Form.Label className="fw-semibold">Price</Form.Label>
                   <Form.Control
-                    type="text"
+                    type="number"
                     value={Price}
                     onChange={(e) => setPrice(e.target.value)}
                     placeholder="Enter Price"
@@ -118,7 +118,7 @@ export default function Card() {
                 <Form.Group>
                   <Form.Label className="fw-semibold">Discound</Form.Label>
                   <Form.Control
-                    type="text"
+                    type="number"
                     value={Discound}
                     onChange={(e) => setDiscound(e.target.value)}
                     placeholder="Enter Discound"

@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import emailjs from '@emailjs/browser';
-// emailjs.init("yfJXYdjqOyFsyx4W2");
 
 export const AppContaxt = createContext();
 
@@ -10,7 +9,7 @@ export function AppProvider({ children }) {
   // ==============================
   const [users, setUsers] = useState(() => {
     const saved = localStorage.getItem("users");
-    return saved ? JSON.parse(saved) : [{ email: "ashish@gmail.com", password: "003" }];
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
@@ -19,6 +18,48 @@ export function AppProvider({ children }) {
   });
 
   const totalUser = users.length;
+    // ==============================
+  // Sign Up / Sign In / Logout
+  // ==============================
+  const handleSignUp = (email, password) => {
+    const exist = users.find(u => u.email === email);
+    if (exist) return { success: false, message: "User already exists!" };
+
+    setUsers(prev => [...prev, { email, password }]);
+    return { success: true, message: "Sign Up successful" };
+  };
+
+  const handleSignIn = (email, password) => {
+    const user = users.find(u => u.email === email && u.password === password);
+    if (user) {
+      setCurrentUser(user);
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      return { success: true, message: "Login successful" };
+    }
+    return { success: false, message: "Invalid email or password" };
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem("currentUser");
+  };
+  // ==============================
+  // Admin Login
+  // ==============================
+  const handleAdminLogin = (email, password) => {
+    if (email === "ashishadmin11@gmail.com" && password === "Ashish0123") {
+      localStorage.setItem("adminAuth", true);
+      return { success: true, message: "Login successful" };
+    } else {
+      return { success: false, message: "Invalid Admin Credentials" };
+    }
+  };
+
+  // ==============================
+  // Username
+  // ==============================
+  const [username, setUsername] = useState("");
+  const HandleUsername = (name) => setUsername(name);
 
   // ==============================
   // Items / Products
@@ -36,6 +77,10 @@ export function AppProvider({ children }) {
     return saved ? JSON.parse(saved) : [];
   });
 
+const [Orderitem,setOrderitem]=useState(()=>{
+  const saved= localStorage.getItem("Orderitem");
+  return saved ? JSON.parse(saved):[];
+})
   // ==============================
   // User-specific Cart Items
   // ==============================
@@ -120,6 +165,8 @@ export function AppProvider({ children }) {
     }
   };
 
+
+
   const handleRemoveToCard = (id) => {
     setCartItems(prev =>
       prev.reduce((acc, item) => {
@@ -156,7 +203,24 @@ const handlePlaceOrder = ({ name, email, address, phone, totalPrice, navigate })
     alert("Please fill all fields");
     return;
   }
-
+   // ==============================
+  // User: order ko order.jsx me dekna k liya
+  // ==============================
+   const order = {
+    id: Date.now(),
+    name,
+    email,
+    address,
+    phone,
+    totalPrice,
+    items: cartItems.filter(item => item.userEmail === currentUser.email),
+    date: new Date().toLocaleString()
+  };
+  // save this order separately
+  const updatedOrders = [...Orderitem, order];
+  setOrderitem(updatedOrders);
+  localStorage.setItem("Orderitem", JSON.stringify(updatedOrders));
+// email send k liya 
   const templateParams = {
     name,
     email,
@@ -166,10 +230,10 @@ const handlePlaceOrder = ({ name, email, address, phone, totalPrice, navigate })
   };
 
   emailjs.send(
-    "service_brhsp0e",    // EmailJS service ID
-    "template_hj9paf1",   // EmailJS template ID
-    templateParams,
-    "pm4CSGMZiBMkTGHIJ"    // EmailJS public key
+    // "service_brhsp0e",    // EmailJS service ID
+    // "template_hj9paf1",   // EmailJS template ID
+    // templateParams,
+    // "pm4CSGMZiBMkTGHIJ"    // EmailJS public key
   ).then(
     (response) => {
       alert('Order placed successfully! Confirmation email sent.');
@@ -184,31 +248,7 @@ const handlePlaceOrder = ({ name, email, address, phone, totalPrice, navigate })
   );
 };
 
-  // ==============================
-  // Sign Up / Sign In / Logout
-  // ==============================
-  const handleSignUp = (email, password) => {
-    const exist = users.find(u => u.email === email);
-    if (exist) return { success: false, message: "User already exists!" };
 
-    setUsers(prev => [...prev, { email, password }]);
-    return { success: true, message: "Sign Up successful" };
-  };
-
-  const handleSignIn = (email, password) => {
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-      setCurrentUser(user);
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      return { success: true, message: "Login successful" };
-    }
-    return { success: false, message: "Invalid email or password" };
-  };
-
-  const handleLogout = () => {
-    setCurrentUser(null);
-    localStorage.removeItem("currentUser");
-  };
 
   // ==============================
   // Persist Data
@@ -225,23 +265,6 @@ const handlePlaceOrder = ({ name, email, address, phone, totalPrice, navigate })
     localStorage.setItem("users", JSON.stringify(users));
   }, [users]);
 
-  // ==============================
-  // Admin Login
-  // ==============================
-  const handleAdminLogin = (email, password) => {
-    if (email === "ashishadmin11@gmail.com" && password === "Ashish0123") {
-      localStorage.setItem("adminAuth", true);
-      return { success: true, message: "Login successful" };
-    } else {
-      return { success: false, message: "Invalid Admin Credentials" };
-    }
-  };
-
-  // ==============================
-  // Username
-  // ==============================
-  const [username, setUsername] = useState("");
-  const HandleUsername = (name) => setUsername(name);
 
   return (
     <AppContaxt.Provider
@@ -266,7 +289,8 @@ const handlePlaceOrder = ({ name, email, address, phone, totalPrice, navigate })
         totalUser,
         handleAdminLogin,
         username,
-        HandleUsername
+        HandleUsername,
+        Orderitem
       }}
     >
       {children}
